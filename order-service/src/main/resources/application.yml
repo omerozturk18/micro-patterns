@@ -7,16 +7,29 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+# ==================== PHYSICAL CQRS: Dual Datasources ====================
 spring:
+  # Write Database (Command Model - Normalized)
   datasource:
-    url: jdbc:h2:mem:order-service_db
+    url: jdbc:h2:mem:order_write_db
     driverClassName: org.h2.Driver
     username: sa
     password:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
   h2:
     console:
       enabled: true
       path: /h2-console
+
+  # Read Database (Query Model - Denormalized)
+  datasource-read:
+    url: jdbc:h2:mem:order_read_db
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
